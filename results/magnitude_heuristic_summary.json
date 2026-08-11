@@ -1,0 +1,10 @@
+{
+  "n_configurations": 288,
+  "spearman_magnitude_sparse_vs_causal": 0.21647082287161915,
+  "p_magnitude_sparse_vs_causal": 0.00021421010877454823,
+  "spearman_raw_magnitude_vs_causal": 0.24862944504847057,
+  "p_raw_magnitude_vs_causal": 1.9701811503732152e-05,
+  "top_k": 20,
+  "top_k_sparse_overlap": 0,
+  "top_k_raw_overlap": 0
+}

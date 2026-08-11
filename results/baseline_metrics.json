@@ -1,0 +1,20 @@
+{
+  "dataset": "bumbledeep/aptos",
+  "model": "microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224",
+  "seed": 0,
+  "n_images": 100,
+  "accuracy": 0.84,
+  "auroc": 0.9416000000000001,
+  "confusion_matrix": [
+    [
+      49,
+      1
+    ],
+    [
+      15,
+      35
+    ]
+  ],
+  "no_dr_prompt": "normal retina without diabetic retinopathy",
+  "dr_prompt": "retina with diabetic retinopathy lesions"
+}

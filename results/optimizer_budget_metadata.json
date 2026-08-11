@@ -1,0 +1,21 @@
+{
+  "oracle": 0.08902109718322748,
+  "oracle_description": "Fixed candidate-table oracle used by the historical budget-search experiment",
+  "methods": [
+    "random",
+    "bayespatch_tpe_unique"
+  ],
+  "budgets": [
+    10,
+    20,
+    30,
+    50,
+    100
+  ],
+  "n_seeds_by_method": {
+    "bayespatch_tpe_unique": 10,
+    "random": 10
+  },
+  "historical_implementation_available": false,
+  "note": "The original Optuna implementation was not present in the exported notebook. These are the historical per-seed trajectories used by the camera-ready analysis."
+}

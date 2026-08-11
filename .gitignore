@@ -1,0 +1,107 @@
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments and environment files
+.venv/
+venv/
+env/
+ENV/
+.env
+.env.*
+!.env.example
+
+# Jupyter and Colab
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+/content/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# Hugging Face, model, and experiment caches
+.cache/
+huggingface/
+hf_cache/
+transformers_cache/
+datasets_cache/
+wandb/
+mlruns/
+optuna.db
+
+# Model weights and serialized activations
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+*.pkl
+*.pickle
+*.npy
+*.npz
+
+# Downloaded or generated APTOS images
+aptos_hf_subset_images/
+aptos_hf_subset_seed*_images/
+aptos_images/
+aptos_data/
+data/images/
+data/raw/
+data/cache/
+data/**/*.jpg
+data/**/*.jpeg
+data/**/*.png
+data/**/*.tif
+data/**/*.tiff
+data/**/*.bmp
+
+# Private or intermediate manifests
+data/source_*.csv
+data/*private*.csv
+data/*with_paths*.csv
+results/*private*.csv
+results/*with_paths*.csv
+*subset_margins_with_paths*.csv
+
+# Temporary and checkpoint outputs
+tmp/
+temp/
+checkpoints/
+*.tmp
+*.temp
+*.part
+*.log
+
+# Repository and Colab backup archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
+
+# Local manuscript exports
+BayesPatch__*.pdf
+
+# Credentials and local configuration
+credentials.json
+service-account*.json
+token.json
+secrets.*

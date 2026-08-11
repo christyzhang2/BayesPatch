@@ -1,0 +1,10 @@
+open_clip_torch
+datasets
+optuna
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+Pillow
+tqdm

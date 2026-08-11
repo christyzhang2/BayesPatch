@@ -1,0 +1,3 @@
+baseline,spearman_rho,p_value,top_20_overlap
+Sparsity-adjusted magnitude,0.21647082287161915,0.00021421010877454823,0
+Raw magnitude,0.24862944504847057,1.9701811503732152e-05,0
