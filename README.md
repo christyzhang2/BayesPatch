@@ -17,49 +17,49 @@ The camera-ready experiments apply BayesPatch to frozen BiomedCLIP representatio
 
 For a donor image $x_d$, target image $x_t$, layer $\ell$, token region $r$, and patch strength $\alpha$, BayesPatch interpolates donor activations into the target forward pass:
 
-$$
+```math
 \widetilde{A}_{\ell,r}(x_t)
 =
 (1-\alpha)A_{\ell,r}(x_t)
 +
 \alpha A_{\ell,r}(x_d).
-$$
+```
 
 The model's diabetic-retinopathy prompt margin is
 
-$$
+```math
 m(x)
 =
 s(x,t_{\mathrm{DR}})
 -
 s(x,t_{\mathrm{NoDR}}),
-$$
+```
 
 where $s$ is cosine similarity between normalized image and text embeddings. The causal effect of a configuration $c=(\ell,r,\alpha)$ is
 
-$$
+```math
 \Delta m(c)
 =
 m_{\mathrm{patched}}(x_t;c)
 -
 m(x_t).
-$$
+```
 
 BayesPatch scores configurations using
 
-$$
+```math
 J(c)
 =
 \mathbb{E}_{(x_d,x_t)}[\Delta m(c)]
 -
 \lambda C(c),
-$$
+```
 
 with
 
-$$
+```math
 C(c)=C(r)\alpha.
-$$
+```
 
 The sparsity penalty favors compact and inspectable interventions. It is a hand-designed proxy for inspection burden, not a clinically validated measure of interpretability.
 
