@@ -1,13 +1,14 @@
 # BayesPatch
 
-**Sparsity-Constrained Activation-Patching Search for Medical Vision-Language Models**
+**BayesPatch: Causal Auditing of Medical Vision-Language Models via Sparse Activation Patching**
 
-Official research-code release for the MI4MedFM workshop at MICCAI 2026.
+Official code release for the paper accepted at **VLM4RWD 2026**, the NeurIPS 2026 Workshop on Grounded and Faithful Vision-Language Models for Real-World Deployment.
 
-**Authors:** Ziyue Zhang, Indira Duisembayeva, Muhammad Bilal, and Yutong Xie  
-**Affiliation:** Mohamed bin Zayed University of Artificial Intelligence, Abu Dhabi, United Arab Emirates
+**Authors:** Ziyue Zhang¹, Indira Duisembayeva¹, Ufaq Khan¹, Muhammad Bilal², Muhammad Haris Khan¹, Yutong Xie¹  
+¹ Mohamed bin Zayed University of Artificial Intelligence, Abu Dhabi, UAE  
+² Birmingham City University, Birmingham, UK
 
-BayesPatch is a proof-of-concept framework for searching sparse, causal activation-level interventions in medical vision-language models. It treats activation patching as a finite optimization problem over the visual-transformer layer, token region, and patch strength, rewarding interventions that shift a disease-prompt margin while penalizing broad patches.
+BayesPatch is a proof-of-concept framework for causally auditing internal representations of medical vision-language models with activation patching. It searches over visual-transformer layer, token region, and patch strength, scoring interventions by how much they shift a disease-prompt margin while penalizing broad patches, and validates candidate interventions with a four-condition directional protocol (cross-class forward and reverse transfer, plus symmetric same-class controls).
 
 The camera-ready experiments apply BayesPatch to frozen BiomedCLIP representations on diabetic-retinopathy prompts and balanced subsets derived from the APTOS 2019 dataset.
 
@@ -73,32 +74,51 @@ On the balanced 100-image APTOS-HF subset, frozen BiomedCLIP achieved:
 | AUROC | 0.9416 |
 | Confusion matrix | `[[49, 1], [15, 35]]` |
 
-At $\lambda=0.03$, the historical 528-configuration sparse grid identified:
+At $\lambda=0.03$, the historical 528-configuration sparse grid (evaluated on an earlier donor-target sample) identified:
 
 | Configuration | Mean DR-margin shift | Sparse objective |
 |---|---:|---:|
 | L11 CLS, $\alpha=1.0$ | 0.1084 | 0.1069 |
 | L1 center, $\alpha=1.0$ | 0.0877 | 0.0802 |
 
-Directionality controls on the reproducible Hugging Face subset produced:
+Rerunning all 528 configurations on the primary donor-target pairs reproduces this ranking (Spearman $\rho=0.989$ over mean shifts; same top configuration and same top three non-CLS configurations: L1, L2, and L0 center). See `results/camera_ready/part5_grid_rerun_primary_pairs.csv`.
 
-| Configuration | DR to no-DR | no-DR to no-DR | Reverse no-DR to DR |
+Four-condition directional controls on the primary top-10 pairs (pair-level mean ± SD):
+
+| Configuration | DR to no-DR | Reverse no-DR to DR | no-DR to no-DR | DR to DR |
+|---|---:|---:|---:|---:|
+| L11 CLS, $\alpha=1.0$ | +0.1119 ± 0.0169 | -0.1008 ± 0.0156 | +0.0111 ± 0.0074 | -0.0313 ± 0.0164 |
+| L1 center, $\alpha=1.0$ | +0.0995 ± 0.0240 | -0.0488 ± 0.0180 | +0.0134 ± 0.0096 | -0.0193 ± 0.0195 |
+
+Robustness of L1 center (mean shifts; same-class column is no-DR to no-DR):
+
+| Setting | DR to no-DR | Same-class | no-DR to DR |
 |---|---:|---:|---:|
-| L11 CLS, $\alpha=1.0$ | +0.1119 ± 0.0169 | +0.0111 ± 0.0074 | -0.1008 ± 0.0156 |
-| L1 center, $\alpha=1.0$ | +0.0995 ± 0.0240 | +0.0134 ± 0.0096 | -0.0488 ± 0.0180 |
+| Top-10 (primary) | +0.0995 | +0.0134 | -0.0488 |
+| Top-5 | +0.1056 | +0.0191 | -0.0541 |
+| Medium-confidence | +0.0294 | +0.0062 | -0.0135 |
+| Random-10 (seed 0) | +0.0511 | +0.0034 | -0.0285 |
+| Fundus prompt | +0.0598 | +0.0090 | -0.0279 |
+| Clinical-signs prompt | +0.0640 | +0.0117 | -0.0253 |
+| Subset seed 1 | +0.0904 | +0.0086 | -0.0570 |
+| Subset seed 2 | +0.0752 | +0.0111 | -0.0415 |
+
+The two additional subsets share no images with the main subset, so they act as confirmatory tests of the configuration selected on the main subset.
 
 Because the 100 pair-level observations reuse 10 donors and 10 targets, inferential tests are performed after target-level and donor-level aggregation rather than treating all pairs as independent.
 
-The non-causal magnitude heuristic correlated only weakly with causal patching:
+Over the 288 configurations for which it was computed (CLS, center, and the four half-image regions), the non-causal magnitude heuristic correlated only weakly with causal patching:
 
 | Comparison | Spearman $\rho$ |
 |---|---:|
 | Sparsity-adjusted magnitude vs. causal objective | 0.216 |
 | Raw activation magnitude vs. causal objective | 0.249 |
 
-The sparsity-adjusted magnitude ranking had zero overlap with the top 20 causal configurations.
+The sparsity-adjusted magnitude ranking had zero overlap with the top 20 causal configurations. This comparison ranks fixed patching regions. Selecting the top-64 tokens by activation distance without the region constraint gives a more nuanced picture: one pooled token set per layer transfers little (+0.0353 at L1), whereas per-pair selection is competitive with the center block (+0.0904 at L1, and slightly above it at layers 6-9).
 
-In the historical fixed-table budget experiment, duplicate-free TPE achieved a higher mean best objective than random search at every reported budget:
+Fundus-geometry control: all 64 center tokens lie inside the fundus in every image, versus 75-80% of half-image and quadrant tokens. At L1, 64 random in-fundus tokens nearly match the center block in the forward direction (+0.0951 vs. +0.0995) but not in reverse (-0.0115 vs. -0.0488).
+
+In the historical fixed-table budget experiment (reported in the paper's appendix), duplicate-free TPE achieved a higher mean best objective than random search at every reported budget:
 
 | Budget | BayesPatch | Random search |
 |---:|---:|---:|
@@ -135,13 +155,16 @@ BayesPatch/
 ├── analysis/
 │   ├── image_level_statistics.py
 │   ├── magnitude_analysis.py
-│   └── budget_analysis.py
+│   ├── budget_analysis.py
+│   └── create_public_manifests.py
+│
+├── notebooks/
+│   └── camera_ready_experiments.ipynb
 │
 ├── data/
 │   ├── main_subset_indices.csv
 │   ├── seed1_subset_indices.csv
-│   ├── seed2_subset_indices.csv
-│   └── historical_selected_pairs.csv
+│   └── seed2_subset_indices.csv
 │
 ├── results/
 │   ├── baseline_metrics.json
@@ -157,13 +180,15 @@ BayesPatch/
 │   ├── magnitude_heuristic_summary.json
 │   ├── optimizer_budget_curves.csv
 │   ├── optimizer_budget_summary.csv
-│   └── optimizer_budget_metadata.json
+│   ├── optimizer_budget_metadata.json
+│   └── camera_ready/          # outputs of notebooks/camera_ready_experiments.ipynb
 │
 └── figures/
-    └── budget_search_curve.pdf
+    ├── budget_search_curve.pdf
+    └── region_schematic.pdf
 ```
 
-Some result or robustness files may be omitted from a minimal release. The commands below describe the files included in the camera-ready repository.
+`results/` also contains a few intermediate tables (for example `grid_config_metrics.csv` and the top-20 lists) used to build the paper tables.
 
 ## Model and dataset
 
@@ -192,7 +217,7 @@ The main subset contains:
 - grade distribution for DR-present images: 8 grade-1, 27 grade-2, 4 grade-3, and 11 grade-4 examples;
 - subset seed 0.
 
-Two additional balanced subsets use seeds 1 and 2.
+Two additional balanced subsets use seeds 1 and 2. Neither shares an image with the main subset.
 
 APTOS retinal images are **not** included in this repository. Public CSV manifests contain only dataset indices, subset indices, grades, binary labels, and reproducibility metadata.
 
@@ -209,6 +234,14 @@ DR prompt:
 ```text
 retina with diabetic retinopathy lesions
 ```
+
+Prompt-robustness templates (no-DR / DR):
+
+| Template | No-DR prompt | DR prompt | Baseline AUROC |
+|---|---|---|---:|
+| Original | normal retina without diabetic retinopathy | retina with diabetic retinopathy lesions | 0.942 |
+| Fundus | fundus photograph without diabetic retinopathy | fundus photograph with diabetic retinopathy | 0.890 |
+| Clinical signs | retinal image with no diabetic retinopathy signs | retinal image showing diabetic retinopathy signs | 0.847 |
 
 ## Search space
 
@@ -235,7 +268,7 @@ q4
 random
 ```
 
-The four quadrants correspond to upper-left, upper-right, lower-left, and lower-right regions of the 14 by 14 patch-token grid. The random region contains 49 of the 196 spatial patch tokens.
+The four quadrants correspond to upper-left, upper-right, lower-left, and lower-right regions of the 14 by 14 patch-token grid. The random region contains 49 of the 196 spatial patch tokens. `figures/region_schematic.pdf` shows every region together with a fundus mask.
 
 Region costs are:
 
@@ -341,6 +374,8 @@ The full run evaluates:
 - no-DR donor to no-DR target;
 - reverse no-DR donor to DR target.
 
+The DR to DR same-class control and the random-10 setting are produced by Part 6 of `notebooks/camera_ready_experiments.ipynb`.
+
 ## Image-aggregated statistical analysis
 
 Run:
@@ -387,9 +422,22 @@ quadrant_lr          -> q4
 random_patch_tokens  -> random
 ```
 
-The original exported Colab contained the resulting grid table and its analysis but not the original grid-execution loop. `scripts/run_grid.py` is therefore a reconstruction of the exhaustive runner using the released patching implementation and Hugging Face manifest.
+The original exported Colab contained the resulting grid table and its analysis but not the original grid-execution loop, and the donor-target sample used for the historical grid was not retained. `scripts/run_grid.py` defines the search space only. A runnable replication of the full grid on the primary donor-target pairs is Part 5 of `notebooks/camera_ready_experiments.ipynb`; it reproduces the historical ranking (Spearman $\rho=0.989$) with mean shifts that match the directionality tables. The released historical table remains the source for the grid values reported in Sec. 4.1 and Fig. 2 of the paper.
 
-Because the historical grid and cleaned Hugging Face experiments have distinct subset provenance, a newly reconstructed HF grid should be treated as a replication experiment rather than expected to reproduce every historical grid value exactly. The released historical table is the source for the camera-ready grid values.
+## Camera-ready analyses
+
+`notebooks/camera_ready_experiments.ipynb` runs on a Colab T4 GPU in about 20-30 minutes and reuses the released `bayespatch` package. Its outputs are in `results/camera_ready/`:
+
+| Part | Analysis | Main output |
+|---|---|---|
+| 0 | Sanity check against the directionality table | `part0_sanity_check.csv` |
+| 1 | Fundus mask: in-fundus token counts per region | `part1_region_effective_tokens.csv` |
+| 2 | Size-matched in-fundus controls for the center region | `part2_infundus_controls_*.csv` |
+| 3 | Top-k activation-magnitude token patching without region constraint | `part3_magnitude_topk_*.csv` |
+| 5 | Full 528-configuration grid on the primary pairs | `part5_grid_rerun_primary_pairs.csv` |
+| 6 | Four-condition controls (incl. DR to DR) for primary, random-10, and subsets 1-2 | `part6_four_condition_*.csv` |
+
+All tests aggregate pairs to the target level before one-sided Wilcoxon signed-rank tests. Part 4 draws the region figure; mask-check images and figures that display APTOS images are not included in the repository.
 
 ## Magnitude heuristic
 
@@ -462,11 +510,12 @@ BayesPatch is evaluated on:
 - small balanced subsets;
 - confidence-selected donor-target examples;
 - a manually specified sparsity-cost schedule;
+- configuration discovery and first testing on the same main subset (the two disjoint subsets confirm the selected configuration but do not repeat the discovery search);
 - a finite search space for which exhaustive evaluation remains feasible.
 
 The intervention results identify candidate activation-level mechanisms only in the computational sense: changing these activations changes the model's disease-prompt margin. They do not establish biological mechanisms, lesion localization, clinical meaningfulness, diagnostic validity, fairness, robustness in deployment, or patient safety.
 
-The center-region intervention may reflect correlated image characteristics such as illumination, contrast, field of view, or image quality. Clinical interpretation would require lesion annotations, nuisance-matched controls, and expert ophthalmological review.
+The forward center-region effect is largely matched by random in-fundus tokens, so it partly reflects fundus coverage. The center-region intervention may reflect correlated image characteristics such as illumination, contrast, field of view, or image quality. Clinical interpretation would require lesion annotations, nuisance-matched controls, and expert ophthalmological review.
 
 ## Data and privacy
 
@@ -498,17 +547,12 @@ git diff --cached --name-only
 
 ## Citation
 
-A proceedings citation will be added when the final workshop bibliographic record is available.
-
-For now, please cite the paper as:
-
 ```bibtex
 @inproceedings{zhang2026bayespatch,
-  author      = {Zhang, Ziyue and Duisembayeva, Indira and Bilal, Muhammad and Xie, Yutong},
-  title       = {BayesPatch: Sparsity-Constrained Activation-Patching Search for Medical Vision-Language Models},
-  booktitle   = {Proceedings of the MI4MedFM Workshop at MICCAI},
-  institution = {Mohamed bin Zayed University of Artificial Intelligence},
-  year        = {2026}
+  author    = {Zhang, Ziyue and Duisembayeva, Indira and Khan, Ufaq and Bilal, Muhammad and Khan, Muhammad Haris and Xie, Yutong},
+  title     = {{BayesPatch}: Causal Auditing of Medical Vision-Language Models via Sparse Activation Patching},
+  booktitle = {NeurIPS 2026 Workshop on Grounded and Faithful Vision-Language Models for Real-World Deployment (VLM4RWD)},
+  year      = {2026}
 }
 ```
 

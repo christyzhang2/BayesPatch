@@ -1,0 +1,33 @@
+setting,config,test,p
+primary_top10,L1 center,forward > 0,0.0009765625
+primary_top10,L1 center,reverse < 0,0.0009765625
+primary_top10,L1 center,forward > no-DR control (paired by target),0.0009765625
+primary_top10,L1 center,reverse < DR control (paired by target),0.0009765625
+primary_top10,L11 CLS,forward > 0,0.0009765625
+primary_top10,L11 CLS,reverse < 0,0.0009765625
+primary_top10,L11 CLS,forward > no-DR control (paired by target),0.0009765625
+primary_top10,L11 CLS,reverse < DR control (paired by target),0.0009765625
+random10_seed0,L1 center,forward > 0,0.0009765625
+random10_seed0,L1 center,reverse < 0,0.009765625
+random10_seed0,L1 center,forward > no-DR control (paired by target),0.0009765625
+random10_seed0,L1 center,reverse < DR control (paired by target),0.0009765625
+random10_seed0,L11 CLS,forward > 0,0.0009765625
+random10_seed0,L11 CLS,reverse < 0,0.0009765625
+random10_seed0,L11 CLS,forward > no-DR control (paired by target),0.0009765625
+random10_seed0,L11 CLS,reverse < DR control (paired by target),0.0009765625
+subset1_top10,L1 center,forward > 0,0.0009765625
+subset1_top10,L1 center,reverse < 0,0.0009765625
+subset1_top10,L1 center,forward > no-DR control (paired by target),0.0009765625
+subset1_top10,L1 center,reverse < DR control (paired by target),0.0009765625
+subset1_top10,L11 CLS,forward > 0,0.0009765625
+subset1_top10,L11 CLS,reverse < 0,0.0009765625
+subset1_top10,L11 CLS,forward > no-DR control (paired by target),0.0009765625
+subset1_top10,L11 CLS,reverse < DR control (paired by target),0.0009765625
+subset2_top10,L1 center,forward > 0,0.0009765625
+subset2_top10,L1 center,reverse < 0,0.0009765625
+subset2_top10,L1 center,forward > no-DR control (paired by target),0.0009765625
+subset2_top10,L1 center,reverse < DR control (paired by target),0.0009765625
+subset2_top10,L11 CLS,forward > 0,0.0009765625
+subset2_top10,L11 CLS,reverse < 0,0.0009765625
+subset2_top10,L11 CLS,forward > no-DR control (paired by target),0.0009765625
+subset2_top10,L11 CLS,reverse < DR control (paired by target),0.0009765625

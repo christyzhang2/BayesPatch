@@ -1,0 +1,27 @@
+direction,layer,comparison,center_mean,control_mean,alternative,p_value
+forward,0,center_64 vs in_fundus_random_64,0.09632048,0.09368284,greater,0.080078125
+forward,0,center_64 vs in_fundus_noncenter_64,0.09632048,0.05555833,greater,0.0009765625
+forward,1,center_64 vs in_fundus_random_64,0.09948157,0.09510208,greater,0.013671875
+forward,1,center_64 vs in_fundus_noncenter_64,0.09948157,0.058516216,greater,0.0009765625
+forward,2,center_64 vs in_fundus_random_64,0.09761438,0.08631105,greater,0.0009765625
+forward,2,center_64 vs in_fundus_noncenter_64,0.09761438,0.053593565,greater,0.0009765625
+forward,3,center_64 vs in_fundus_random_64,0.0946648,0.08144147,greater,0.0009765625
+forward,3,center_64 vs in_fundus_noncenter_64,0.0946648,0.054339338,greater,0.0009765625
+forward,4,center_64 vs in_fundus_random_64,0.09076942,0.07616935,greater,0.0009765625
+forward,4,center_64 vs in_fundus_noncenter_64,0.09076942,0.050000448,greater,0.0009765625
+forward,5,center_64 vs in_fundus_random_64,0.0899335,0.076845035,greater,0.0009765625
+forward,5,center_64 vs in_fundus_noncenter_64,0.0899335,0.05417198,greater,0.0009765625
+forward,6,center_64 vs in_fundus_random_64,0.08476161,0.07542626,greater,0.0009765625
+forward,6,center_64 vs in_fundus_noncenter_64,0.08476161,0.057882138,greater,0.0009765625
+forward,7,center_64 vs in_fundus_random_64,0.084313944,0.07603039,greater,0.0009765625
+forward,7,center_64 vs in_fundus_noncenter_64,0.084313944,0.05698804,greater,0.0009765625
+forward,8,center_64 vs in_fundus_random_64,0.08308719,0.07580296,greater,0.0009765625
+forward,8,center_64 vs in_fundus_noncenter_64,0.08308719,0.056699198,greater,0.0009765625
+forward,9,center_64 vs in_fundus_random_64,0.069624454,0.063700035,greater,0.0009765625
+forward,9,center_64 vs in_fundus_noncenter_64,0.069624454,0.049269013,greater,0.0009765625
+forward,10,center_64 vs in_fundus_random_64,0.060254283,0.055307776,greater,0.0009765625
+forward,10,center_64 vs in_fundus_noncenter_64,0.060254283,0.043089252,greater,0.0009765625
+forward,11,center_64 vs in_fundus_random_64,1.7881394e-08,1.7881394e-08,greater,1.0
+forward,11,center_64 vs in_fundus_noncenter_64,1.7881394e-08,1.7881394e-08,greater,1.0
+reverse,1,center_64 vs in_fundus_random_64,-0.04876069,-0.011531209,less,0.0009765625
+reverse,1,center_64 vs in_fundus_noncenter_64,-0.04876069,-0.003680244,less,0.001953125
